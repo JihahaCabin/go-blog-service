@@ -1,0 +1,23 @@
+Server:
+  RunMode: debug
+  HttpProt: 8000
+  ReadTimeout: 60
+  WriteTimeout: 60
+
+App:
+  DefaultPageSize: 10
+  MaxPageSize: 100
+  LogSavePath: storage/logs
+  LogFileName: app
+  LogFileExt: .log
+
+DataBase:
+  DBType: mysql
+  Username: root
+  Password: tangguo
+  Host: 127.0.0.1:3306
+  DBName: blog_service
+  Charset: utf8
+  ParseTime: True
+  MaxIdleConns: 10
+  MaxOpenConns: 30
