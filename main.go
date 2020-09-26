@@ -6,7 +6,9 @@ import (
 	"github.com/go-programming-tour-book/blog-service/global"
 	"github.com/go-programming-tour-book/blog-service/internal/model"
 	"github.com/go-programming-tour-book/blog-service/internal/routers"
+	"github.com/go-programming-tour-book/blog-service/pkg/logger"
 	setting "github.com/go-programming-tour-book/blog-service/pkg/setting"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/http"
 	"time"
@@ -55,12 +57,36 @@ func setupDBEngine() error {
 	return nil
 }
 
+/**
+初始化日志组件
+*/
+func setupLogger() error {
+	fileName := global.AppSetting.LogSavePath + "/" +
+		global.AppSetting.LogFileName + global.AppSetting.LogFileExt
+
+	logger.NewLogger(&lumberjack.Logger{
+		Filename:  fileName,
+		MaxSize:   600,
+		MaxAge:    10,
+		LocalTime: true,
+	}, "", log.LstdFlags).WithCaller(2)
+
+	return nil
+}
+
 func init() {
 	//读取配置文件
 	err := setupSetting()
 	if err != nil {
 		log.Fatalf("init setupSetting err: %v", err)
 	}
+
+	//初始化日志组件
+	err = setupLogger()
+	if err != nil {
+		log.Fatalf("init setupLogger err: %v", err)
+	}
+
 	//初始化mysql连接
 	err = setupDBEngine()
 	if err != nil {
@@ -79,5 +105,7 @@ func main() {
 		WriteTimeout:   global.ServerSetting.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
 	}
+
 	s.ListenAndServe()
+
 }
