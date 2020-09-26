@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"runtime"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Level int8
@@ -44,15 +45,16 @@ func (l Level) String() string {
 
 type Logger struct {
 	newLogger *log.Logger
-	ctx       context.Context //日志上下文
-	fields    Fields          //日志公共字段
-	callers   []string        //调用栈信息
+	ctx       context.Context
+	fields    Fields
+	callers   []string
 }
 
 func NewLogger(w io.Writer, prefix string, flag int) *Logger {
 	l := log.New(w, prefix, flag)
 	return &Logger{newLogger: l}
 }
+
 func (l *Logger) clone() *Logger {
 	nl := *l
 	return &nl
@@ -69,14 +71,12 @@ func (l *Logger) WithFields(f Fields) *Logger {
 	return ll
 }
 
-// 设置日志上下文属性
 func (l *Logger) WithContext(ctx context.Context) *Logger {
 	ll := l.clone()
 	ll.ctx = ctx
 	return ll
 }
 
-// 设置当前某一层调用栈信息(程序计数器，文件信息和行号)
 func (l *Logger) WithCaller(skip int) *Logger {
 	ll := l.clone()
 	pc, file, line, ok := runtime.Caller(skip)
@@ -88,7 +88,6 @@ func (l *Logger) WithCaller(skip int) *Logger {
 	return ll
 }
 
-// 设置当前的整个调用栈信息
 func (l *Logger) WithCallersFrames() *Logger {
 	maxCallerDepth := 25
 	minCallerDepth := 1
@@ -119,7 +118,6 @@ func (l *Logger) WithTrace() *Logger {
 	return l
 }
 
-//日志内容格式化
 func (l *Logger) JSONFormat(level Level, message string) map[string]interface{} {
 	data := make(Fields, len(l.fields)+4)
 	data["level"] = level.String()
@@ -137,7 +135,6 @@ func (l *Logger) JSONFormat(level Level, message string) map[string]interface{} 
 	return data
 }
 
-// 日志输出
 func (l *Logger) Output(level Level, message string) {
 	body, _ := json.Marshal(l.JSONFormat(level, message))
 	content := string(body)
