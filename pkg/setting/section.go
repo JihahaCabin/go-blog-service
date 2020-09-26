@@ -23,7 +23,7 @@ type DataBaseSettings struct {
 	DBType       string
 	Username     string
 	Password     string
-	Hosts        string
+	Host         string
 	DBName       string
 	Charset      string
 	ParseTime    bool

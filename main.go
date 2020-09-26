@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-programming-tour-book/blog-service/global"
+	"github.com/go-programming-tour-book/blog-service/internal/model"
 	"github.com/go-programming-tour-book/blog-service/internal/routers"
 	setting "github.com/go-programming-tour-book/blog-service/pkg/setting"
 	"log"
@@ -11,6 +12,9 @@ import (
 	"time"
 )
 
+/**
+读取配置文件
+*/
 func setupSetting() error {
 	setting, err := setting.NewSetting()
 	if err != nil {
@@ -39,11 +43,30 @@ func setupSetting() error {
 	return nil
 }
 
+/**
+初始化mysql连接
+*/
+func setupDBEngine() error {
+	var err error
+	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func init() {
+	//读取配置文件
 	err := setupSetting()
 	if err != nil {
 		log.Fatalf("init setupSetting err: %v", err)
 	}
+	//初始化mysql连接
+	err = setupDBEngine()
+	if err != nil {
+		log.Fatalf("init setupDBEngine err: %v", err)
+	}
+
 }
 
 func main() {
