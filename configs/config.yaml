@@ -10,6 +10,13 @@ App:
   LogSavePath: storage/logs
   LogFileName: app
   LogFileExt: .log
+  UploadSavePath: storage/uploads # 上传文件的最终保存目录
+  UploadServerUrl: http://127.0.0.1:8080/static # 上传文件后用于展示的文件服务地址
+  UploadImageMaxSize: 5 # MB 文件大小最大值
+  UploadImageAllowExts: # 上传文件所允许的文件后缀
+    - .jpg
+    - .jpeg
+    - .png
 
 DataBase:
   DBType: mysql
@@ -21,3 +28,5 @@ DataBase:
   ParseTime: True
   MaxIdleConns: 10 #设置闲置的连接数
   MaxOpenConns: 30 #设置最大打开的连接数
+
+
