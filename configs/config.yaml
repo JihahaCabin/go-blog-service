@@ -29,4 +29,7 @@ DataBase:
   MaxIdleConns: 10 #设置闲置的连接数
   MaxOpenConns: 30 #设置最大打开的连接数
 
-
+JWT:
+  Secret: eddycjy
+  Issuer: blog-service
+  Expire: 7200
